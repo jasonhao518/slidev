@@ -7,7 +7,7 @@ import { bold, gray, red, yellow } from 'kolorist'
 
 // @ts-expect-error missing types
 import mila from 'markdown-it-link-attributes'
-import type { ResolvedSlidevOptions, SlideInfo, SlidePatch, SlidevPluginOptions, SlidevServerOptions } from '@slidev/types'
+import type { ResolvedSlidevOptions, SlideInfo, SlidePatch, SlidevAction, SlidevPluginOptions, SlidevServerOptions } from '@slidev/types'
 import * as parser from '@slidev/parser/fs'
 import equal from 'fast-deep-equal'
 
@@ -147,6 +147,32 @@ export function createSlidesLoader(
         updateServerWatcher()
 
         server.middlewares.use(async (req, res, next) => {
+          if (req.url?.match('/slides/update') && req.method === 'POST') {
+            const body: SlidevAction = await getBodyJson(req)
+            if (body.action === 'init') {
+              res.statusCode = 200
+              if (body.content)
+                await parser.save2(body.content)
+              res.write('OK')
+            }
+            else if (body.action === 'theme') {
+              res.statusCode = 200
+              const slide = data.slides[0]
+              updateFrontmatterPatch(slide, { theme: body.content })
+              parser.prettifySlide(slide.source)
+              await parser.save(data.markdownFiles[slide.source.filepath])
+              res.write('OK')
+            }
+            else if (body.action === 'layout') {
+              res.statusCode = 200
+              hmrPages.add(body.page ?? 1)
+              const slide = data.slides[body.page ?? 1]
+              updateFrontmatterPatch(slide, { layout: body.content })
+              parser.prettifySlide(slide.source)
+              await parser.save(data.markdownFiles[slide.source.filepath])
+            }
+            return res.end()
+          }
           const match = req.url?.match(regexId)
           if (!match)
             return next()

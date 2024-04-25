@@ -108,3 +108,8 @@ export async function save(markdown: SlidevMarkdown) {
   await fs.writeFile(markdown.filepath, fileContent, 'utf-8')
   return fileContent
 }
+
+export async function save2(fileContent: string) {
+  await fs.writeFile('slides.md', fileContent, 'utf-8')
+  return fileContent
+}

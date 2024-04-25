@@ -202,6 +202,5 @@ export function applyMarkdownTransform(
     if (!ctx.s.isEmpty())
       ctx.s.commit()
   }
-
   return ctx
 }

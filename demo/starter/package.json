@@ -7,6 +7,9 @@
     "export": "slidev export",
     "export-notes": "slidev export-notes"
   },
+  "dependencies": {
+    "@slidev/theme-bricks": "^0.25.0"
+  },
   "devDependencies": {
     "@slidev/cli": "workspace:*",
     "@slidev/theme-default": "^0.25.0",

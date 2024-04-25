@@ -12,6 +12,7 @@ import PrintStyle from '../internals/PrintStyle.vue'
 import { onContextMenu } from '../logic/contextMenu'
 import { useNav } from '../composables/useNav'
 import { useDrawings } from '../composables/useDrawings'
+import SideEditor from '../internals/SideEditor.vue'
 
 registerShortcuts()
 
@@ -35,10 +36,6 @@ function onClick(e: MouseEvent) {
 useSwipeControls(root)
 
 const persistNav = computed(() => isScreenVertical.value || showEditor.value)
-
-const SideEditor = shallowRef<any>()
-if (__DEV__ && __SLIDEV_FEATURE_EDITOR__)
-  import('../internals/SideEditor.vue').then(v => SideEditor.value = v.default)
 
 const DrawingControls = shallowRef<any>()
 if (__SLIDEV_FEATURE_DRAWINGS__)
@@ -80,9 +77,7 @@ if (__SLIDEV_FEATURE_DRAWINGS__)
       </template>
     </SlideContainer>
 
-    <template v-if="__DEV__ && __SLIDEV_FEATURE_EDITOR__ && SideEditor && showEditor">
-      <SideEditor :resize="true" />
-    </template>
+    <SideEditor :resize="true" />
   </div>
   <Controls v-if="!isPrintMode" />
 </template>

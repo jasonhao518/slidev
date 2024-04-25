@@ -4,6 +4,12 @@ import type { SlidevConfig } from './config'
 
 export type FrontmatterStyle = 'frontmatter' | 'yaml'
 
+export interface SlidevAction {
+  action?: 'init' | 'insert' | 'delete' | 'theme' | 'layout'
+  page?: number
+  content?: string
+}
+
 export interface SlideInfoBase {
   frontmatter: Record<string, any>
   content: string

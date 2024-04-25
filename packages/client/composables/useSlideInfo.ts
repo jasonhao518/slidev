@@ -76,5 +76,22 @@ export function useDynamicSlideInfo(no: MaybeRef<number>) {
         info.info.value = newData
       return newData
     },
+    patch: async (action: string, page: number, content: string) => {
+      await fetch(
+        '/slides/update',
+        {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            action,
+            page,
+            content,
+          }),
+        },
+      )
+    },
   }
 }

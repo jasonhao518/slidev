@@ -21,7 +21,7 @@ const frontmatter = ref<any>({})
 const contentInput = ref<HTMLTextAreaElement>()
 const noteInput = ref<HTMLTextAreaElement>()
 
-const { info, update } = useDynamicSlideInfo(currentSlideNo)
+const { info, update, patch } = useDynamicSlideInfo(currentSlideNo)
 
 watch(
   info,
@@ -44,6 +44,13 @@ async function save() {
     content: content.value,
     // frontmatter: frontmatter.value,
   })
+}
+
+async function saveTheme(theme: string) {
+  await patch('theme', 0, theme)
+}
+async function saveLayout(layout: string) {
+  await patch('layout', currentSlideNo.value - 1, layout)
 }
 
 function close() {
@@ -181,6 +188,12 @@ throttledWatch(
     <div class="flex pb-2 text-xl -mt-1">
       <div class="mr-4 rounded flex">
         <IconButton
+          title="Switch to theme tab" :class="tab === 'theme' ? 'text-primary' : ''"
+          @click="switchTab('theme')"
+        >
+          <carbon:account />
+        </IconButton>
+        <IconButton
           title="Switch to content tab" :class="tab === 'content' ? 'text-primary' : ''"
           @click="switchTab('content')"
         >
@@ -194,7 +207,7 @@ throttledWatch(
         </IconButton>
       </div>
       <span class="text-2xl pt-1">
-        {{ tab === 'content' ? 'Slide' : 'Notes' }}
+        {{ tab === 'content' ? 'Slide' : tab === 'note' ? 'Notes' : 'Theme' }}
       </span>
       <div class="flex-auto" />
       <template v-if="resize">
@@ -213,6 +226,91 @@ throttledWatch(
       </IconButton>
     </div>
     <div class="overflow-hidden">
+      <div v-show="tab === 'theme'" class="w-full h-full">
+        <p>theme</p>
+        <button
+          border="r main"
+          p="2"
+          font="mono"
+          outline="!none"
+          hover:bg="gray-400 opacity-20"
+          @click="saveTheme('bricks')"
+        >
+          Bricks
+        </button>
+        <button
+          border="r main"
+          p="2"
+          font="mono"
+          outline="!none"
+          hover:bg="gray-400 opacity-20"
+          @click="saveTheme('seriph')"
+        >
+          Seriph
+        </button>
+
+        <p>layout</p>
+        <button
+          border="r main"
+          p="2"
+          font="mono"
+          outline="!none"
+          hover:bg="gray-400 opacity-20"
+          @click="saveLayout('cover')"
+        >
+          Cover
+        </button>
+        <button
+          border="r main"
+          p="2"
+          font="mono"
+          outline="!none"
+          hover:bg="gray-400 opacity-20"
+          @click="saveLayout('intro')"
+        >
+          Intro
+        </button>
+        <button
+          border="r main"
+          p="2"
+          font="mono"
+          outline="!none"
+          hover:bg="gray-400 opacity-20"
+          @click="saveLayout('image')"
+        >
+          Image
+        </button>
+        <button
+          border="r main"
+          p="2"
+          font="mono"
+          outline="!none"
+          hover:bg="gray-400 opacity-20"
+          @click="saveLayout('image-right')"
+        >
+          Image Right
+        </button>
+        <button
+          border="r main"
+          p="2"
+          font="mono"
+          outline="!none"
+          hover:bg="gray-400 opacity-20"
+          @click="saveLayout('404')"
+        >
+          404
+        </button>
+        <button
+          border="r main"
+          p="2"
+          font="mono"
+          outline="!none"
+          hover:bg="gray-400 opacity-20"
+          @click="saveLayout('end')"
+        >
+          End
+        </button>
+      </div>
       <div v-show="tab === 'content'" class="w-full h-full">
         <textarea ref="contentInput" placeholder="Create slide content..." />
       </div>

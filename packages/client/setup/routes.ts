@@ -67,12 +67,13 @@ export default function setupRoutes() {
   routes.push(
     {
       name: 'play',
-      path: '/:no',
+      path: '/slides/:no',
       component: () => import('../pages/play.vue'),
     },
+
     {
-      path: '',
-      redirect: { path: '/1' },
+      path: '/slides',
+      redirect: { path: '/slides/1' },
     },
   )
 

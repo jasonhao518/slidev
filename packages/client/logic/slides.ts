@@ -16,5 +16,5 @@ export function getSlidePath(
   if (typeof route === 'number' || typeof route === 'string')
     route = getSlide(route)!
   const no = route.meta.slide?.frontmatter.routeAlias ?? route.no
-  return presenter ? `/presenter/${no}` : `/${no}`
+  return presenter ? `/presenter/${no}` : `/slides/${no}`
 }
